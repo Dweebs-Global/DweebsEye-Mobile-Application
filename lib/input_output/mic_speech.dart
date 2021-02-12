@@ -8,8 +8,8 @@ class MicSpeech {
   static final _speech = SpeechToText();
 
   static Future<bool> toggleRecording({
-    @required ValueChanged<bool> onListening, // bool - recording initialized?
     @required Function(String text) onResult, // callback with results
+    @required ValueChanged<bool> onListening, // bool - recording initialized?
   }) async {
     // if it was listening, stop on button push
     if (_speech.isListening) {

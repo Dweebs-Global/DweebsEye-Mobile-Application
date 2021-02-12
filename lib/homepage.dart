@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
+import 'commands.dart';
 import 'input_output/mic_speech.dart';
+import 'input_output/speaker_audio.dart';
 
 class HomePage extends StatefulWidget {
   HomePage(this.title);
@@ -12,7 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isListening = false;
-  String text = "Microphone input goes here.";
+  String text = 'Microphone input goes here.';
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class _HomePageState extends State<HomePage> {
             isListening ? Icons.mic : Icons.mic_none,
             size: 70.0,
           ),
-          tooltip: "Get microphone input",
+          tooltip: 'Get microphone input',
           onPressed: toggleRecording,
         ),
       ),
@@ -47,9 +50,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future toggleRecording() => MicSpeech.toggleRecording(
+        onResult: (text) => setState(() => this.text = text),
         onListening: (isListening) {
           setState(() => this.isListening = isListening);
+
+          if (!isListening) {
+            Future.delayed(Duration(seconds: 1), () {
+              SpeakerAudio.playAudio(text: Check.checkCommand(text));
+            });
+          }
         },
-        onResult: (text) => setState(() => this.text = text),
       );
 }
