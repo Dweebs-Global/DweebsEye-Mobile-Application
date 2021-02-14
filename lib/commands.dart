@@ -12,10 +12,10 @@ class Check {
     final text = rawText.toLowerCase();
 
     if (text.contains(Command.object)) {
-      return 'You said object';
+      return 'Command for object detection';
     } else if (text.contains(Command.face)) {
-      return 'You said face';
+      return 'Command for face recognition';
     } else
-      return 'I don\'t recognise this command';
+      return text;
   }
 }

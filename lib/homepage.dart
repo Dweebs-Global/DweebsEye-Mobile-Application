@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isListening = false;
+  bool isPlaying = false;
   String text = 'Microphone input goes here.';
 
   @override
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
             size: 70.0,
           ),
           tooltip: 'Get microphone input',
-          onPressed: toggleRecording,
+          onPressed: isPlaying ? null : toggleRecording,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -55,8 +56,18 @@ class _HomePageState extends State<HomePage> {
           setState(() => this.isListening = isListening);
 
           if (!isListening) {
+            setState(() {
+              isPlaying = true; // flag to disable mic button after listening
+            });
             Future.delayed(Duration(seconds: 1), () {
-              SpeakerAudio.playAudio(text: Check.checkCommand(text));
+              SpeakerAudio.playAudio(
+                  text: Check.checkCommand(text),
+                  onPlaying: (isPlaying) {
+                    setState(() {
+                      this.isPlaying =
+                          isPlaying; // flag to enable mic button after speaking
+                    });
+                  });
             });
           }
         },
