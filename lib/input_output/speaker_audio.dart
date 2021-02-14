@@ -16,6 +16,10 @@ class SpeakerAudio {
     await _audio.setLanguage(lang);
     await _audio.setSpeechRate(speechRate);
     await _audio.setPitch(pitch);
-    await _audio.speak(text);
+    if (text != null) {
+      if (text.isNotEmpty) {
+        await _audio.speak(text);
+      }
+    }
   }
 }

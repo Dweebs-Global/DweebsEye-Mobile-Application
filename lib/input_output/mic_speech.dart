@@ -18,9 +18,9 @@ class MicSpeech {
     }
 
     final isAvailable = await _speech.initialize(
-        // check if speech recognition services were initialized
-        onStatus: (status) => onListening(_speech.isListening),
-        onError: (e) => onResult(e.errorMsg));
+      // check if speech recognition services were initialized
+      onStatus: (status) => onListening(_speech.isListening),
+    );
 
     if (isAvailable) {
       _speech.listen(
