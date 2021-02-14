@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
           ),
           tooltip: 'Get microphone input',
           onPressed: isPlaying ? null : toggleRecording,
+          backgroundColor: isPlaying ? Colors.grey : Colors.teal,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
