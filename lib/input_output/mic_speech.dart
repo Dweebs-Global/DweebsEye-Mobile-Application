@@ -8,8 +8,8 @@ class MicSpeech {
   static final _speech = SpeechToText();
 
   static Future<bool> toggleRecording({
-    @required ValueChanged<bool> onListening, // bool - recording initialized?
     @required Function(String text) onResult, // callback with results
+    @required ValueChanged<bool> onListening, // bool - recording initialized?
   }) async {
     // if it was listening, stop on button push
     if (_speech.isListening) {
@@ -18,9 +18,9 @@ class MicSpeech {
     }
 
     final isAvailable = await _speech.initialize(
-        // check if speech recognition services were initialized
-        onStatus: (status) => onListening(_speech.isListening),
-        onError: (e) => onResult(e.errorMsg));
+      // check if speech recognition services were initialized
+      onStatus: (status) => onListening(_speech.isListening),
+    );
 
     if (isAvailable) {
       _speech.listen(
