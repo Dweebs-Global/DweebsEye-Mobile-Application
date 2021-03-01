@@ -27,6 +27,7 @@ dependencies:
   camera:
   path_provider:
   path:
+  flutter_tts: ^2.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
