@@ -1,18 +1,50 @@
+import 'package:camera/camera.dart';
+import 'package:dweebs_eye/takesnapshot.dart';
 import 'package:flutter/material.dart';
+import 'capturevideo.dart';
 import 'input_output/mic_speech.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage(this.title);
+
+  HomePage(this.title, this.firstCamera);
 
   final String title;
+  CameraDescription firstCamera;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(firstCamera);
 }
 
 class _HomePageState extends State<HomePage> {
   bool isListening = false;
   String text = "Microphone input goes here.";
+  CameraDescription firstCamera;
+  _HomePageState(this.firstCamera);
+
+  void checkForImageCommand(String text)
+  {
+    if (text.contains("photo") || text.contains("Photo"))
+      {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TakePictureScreen(
+              camera: this.firstCamera,
+            ),
+          ),
+        );
+      }
+    if (text.contains("video") || text.contains("Video"))
+      {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CaptureVideo(
+            ),
+          ),
+        );
+      }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +82,10 @@ class _HomePageState extends State<HomePage> {
         onListening: (isListening) {
           setState(() => this.isListening = isListening);
         },
-        onResult: (text) => setState(() => this.text = text),
+        onResult: (text) {
+          setState(() => this.text = text);
+          checkForImageCommand(text);
+
+        }
       );
 }
