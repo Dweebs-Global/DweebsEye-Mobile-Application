@@ -1,22 +1,52 @@
+import 'package:camera/camera.dart';
+import 'package:dweebs_eye/takesnapshot.dart';
 import 'package:flutter/material.dart';
-
-import 'commands.dart';
+import 'capturevideo.dart';
 import 'input_output/mic_speech.dart';
 import 'input_output/speaker_audio.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage(this.title);
+
+  HomePage(this.title, this.firstCamera);
 
   final String title;
+  CameraDescription firstCamera;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(this.firstCamera);
 }
 
 class _HomePageState extends State<HomePage> {
   bool isListening = false;
   bool isPlaying = false;
   String text = 'Microphone input goes here.';
+  CameraDescription firstCamera;
+  _HomePageState(this.firstCamera);
+
+  void checkForImageCommand(String text)
+  {
+    if (text.contains("photo") || text.contains("Photo"))
+    {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TakePictureScreen(
+            camera: this.firstCamera,
+          ),
+        ),
+      );
+    }
+    if (text.contains("video") || text.contains("Video"))
+    {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CaptureVideo(
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +72,8 @@ class _HomePageState extends State<HomePage> {
             isListening ? Icons.mic : Icons.mic_none,
             size: 70.0,
           ),
-          tooltip: 'Get microphone input',
-          onPressed: isPlaying ? null : toggleRecording,
-          backgroundColor: isPlaying ? Colors.grey : Colors.teal,
+          tooltip: "Get microphone input",
+          onPressed: toggleRecording,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -52,25 +81,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future toggleRecording() => MicSpeech.toggleRecording(
-        onResult: (text) => setState(() => this.text = text),
         onListening: (isListening) {
           setState(() => this.isListening = isListening);
-
-          if (!isListening) {
-            setState(() {
-              isPlaying = true; // flag to disable mic button after listening
-            });
-            Future.delayed(Duration(seconds: 1), () {
-              SpeakerAudio.playAudio(
-                  text: Check.checkCommand(text),
-                  onPlaying: (isPlaying) {
-                    setState(() {
-                      this.isPlaying =
-                          isPlaying; // flag to enable mic button after speaking
-                    });
-                  });
-            });
-          }
         },
+        onResult: (text) {
+          setState(() => this.text = text);
+          checkForImageCommand(text);
+
+        }
       );
 }
