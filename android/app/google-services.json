@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1071735723556",
+    "project_id": "dweebs-eye",
+    "storage_bucket": "dweebs-eye.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071735723556:android:394de7a5663da54d4ceab1",
+        "android_client_info": {
+          "package_name": "com.example.dweebs_eye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071735723556-ivcggb0n3l3uumegf4j3kdsucuci4gvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dweebs_eye",
+            "certificate_hash": "81139d6f3faa433c762c85b00b8dd2d3aab92b11"
+          }
+        },
+        {
+          "client_id": "1071735723556-qluu6k5616tnvn4iso6fum8si48trl3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6GCwRd9hwiU1UOJLLtfe5085gOpUKePI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071735723556-qluu6k5616tnvn4iso6fum8si48trl3n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
