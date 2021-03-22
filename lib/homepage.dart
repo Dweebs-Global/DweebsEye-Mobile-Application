@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dweebs_eye/face_detection/face_detection.dart';
 import 'package:dweebs_eye/takesnapshot.dart';
 import 'package:flutter/material.dart';
 import 'capturevideo.dart';
@@ -46,6 +47,16 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
+    if (text.toLowerCase().contains("label") || text.toLowerCase().contains("face"))
+      {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FaceDetection(
+            ),
+          ),
+        );
+      }
   }
 
   @override
