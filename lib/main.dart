@@ -1,12 +1,14 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
+import 'login.dart';
 
-Future<void> main() async {
+void main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
   // Obtain a list of the available cameras on the device.
   final cameras = await availableCameras();
 
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: HomePage(title,firstCamera),
+      home: new Login(title,firstCamera),
     );
   }
 }

@@ -41,6 +41,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071735723556:android:3d47c89856f6ef564ceab1",
+        "android_client_info": {
+          "package_name": "com.projects.dweebs_eye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071735723556-98c31e6gdhq8j9fhj761j840oq3ik50o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.projects.dweebs_eye",
+            "certificate_hash": "81139d6f3faa433c762c85b00b8dd2d3aab92b11"
+          }
+        },
+        {
+          "client_id": "1071735723556-qluu6k5616tnvn4iso6fum8si48trl3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6GCwRd9hwiU1UOJLLtfe5085gOpUKePI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071735723556-qluu6k5616tnvn4iso6fum8si48trl3n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
