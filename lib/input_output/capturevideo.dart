@@ -5,7 +5,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class VideoRecorderExample extends StatefulWidget {
   @override
   _VideoRecorderExampleState createState() {
@@ -28,8 +27,7 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
 
     // Get the listonNewCameraSelected of available cameras.
     // Then set the first camera as selected.
-    availableCameras()
-        .then((availableCameras) {
+    availableCameras().then((availableCameras) {
       cameras = availableCameras;
 
       if (cameras.length > 0) {
@@ -39,8 +37,7 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
 
         _onCameraSwitched(cameras[selectedCameraIdx]).then((void v) {});
       }
-    })
-        .catchError((err) {
+    }).catchError((err) {
       print('Error: $err.code\nError Message: $err.message');
     });
   }
@@ -137,12 +134,9 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
         alignment: Alignment.centerLeft,
         child: FlatButton.icon(
             onPressed: _onSwitchCamera,
-            icon: Icon(
-                _getCameraLensIcon(lensDirection)
-            ),
-            label: Text("${lensDirection.toString()
-                .substring(lensDirection.toString().indexOf('.')+1)}")
-        ),
+            icon: Icon(_getCameraLensIcon(lensDirection)),
+            label: Text(
+                "${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1)}")),
       ),
     );
   }
@@ -160,8 +154,8 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
               icon: const Icon(Icons.videocam),
               color: Colors.blue,
               onPressed: controller != null &&
-                  controller.value.isInitialized &&
-                  !controller.value.isRecordingVideo
+                      controller.value.isInitialized &&
+                      !controller.value.isRecordingVideo
                   ? _onRecordButtonPressed
                   : null,
             ),
@@ -169,8 +163,8 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
               icon: const Icon(Icons.stop),
               color: Colors.red,
               onPressed: controller != null &&
-                  controller.value.isInitialized &&
-                  controller.value.isRecordingVideo
+                      controller.value.isInitialized &&
+                      controller.value.isRecordingVideo
                   ? _onStopButtonPressed
                   : null,
             )
@@ -195,8 +189,7 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
         setState(() {});
       }
 
-      if (controller.value.hasError) {
-      }
+      if (controller.value.hasError) {}
     });
 
     try {
@@ -211,9 +204,8 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
   }
 
   void _onSwitchCamera() {
-    selectedCameraIdx = selectedCameraIdx < cameras.length - 1
-        ? selectedCameraIdx + 1
-        : 0;
+    selectedCameraIdx =
+        selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
     CameraDescription selectedCamera = cameras[selectedCameraIdx];
 
     _onCameraSwitched(selectedCamera);
@@ -230,7 +222,6 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
   void _onStopButtonPressed() {
     _stopVideoRecording().then((filePath) {
       if (mounted) setState(() {});
-
     });
   }
 
@@ -248,7 +239,7 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
     final String videoDirectory = '${appDirectory.path}/Videos';
     await Directory(videoDirectory).create(recursive: true);
     final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-    final String filePath = '$videoDirectory/${currentTime}.mp4';
+    final String filePath = '$videoDirectory/$currentTime.mp4';
 
     try {
       await controller.startVideoRecording();
@@ -257,7 +248,6 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
       _showCameraException(e);
       return;
     }
-
   }
 
   Future<String> _stopVideoRecording() async {
@@ -277,7 +267,6 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
   void _showCameraException(CameraException e) {
     String errorText = 'Error: ${e.code}\nError Message: ${e.description}';
     print(errorText);
-
   }
 }
 

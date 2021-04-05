@@ -26,8 +26,8 @@ class MicSpeech {
       _speech.listen(
         // works offline as well
         onResult: (value) => onResult(value.recognizedWords),
-        listenFor: Duration(seconds: 5),
-        pauseFor: Duration(seconds: 5),
+        listenFor: Duration(seconds: 3),
+        pauseFor: Duration(seconds: 3),
         cancelOnError: true,
         partialResults: false,
       );
