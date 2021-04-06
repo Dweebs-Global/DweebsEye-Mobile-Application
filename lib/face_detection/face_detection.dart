@@ -4,19 +4,15 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
-class FaceDetection extends StatefulWidget
-{
+
+class FaceDetection extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-   return FaceDetectionState();
+    return FaceDetectionState();
   }
-
 }
 
-class FaceDetectionState extends State<FaceDetection>
-{
-
+class FaceDetectionState extends State<FaceDetection> {
   File _imageFile;
   List<Face> _faces;
   bool isLoading = false;
@@ -25,7 +21,6 @@ class FaceDetectionState extends State<FaceDetection>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: _getImage,
@@ -34,17 +29,17 @@ class FaceDetectionState extends State<FaceDetection>
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : (_imageFile == null)
-            ? Center(child: Text('no image selected'))
-            : Center(
-            child: FittedBox(
-              child: SizedBox(
-                width: _image.width.toDouble(),
-                height: _image.height.toDouble(),
-                child: CustomPaint(
-                  painter: FacePainter(_image, _faces),
-                ),
-              ),
-            )));
+                ? Center(child: Text('no image selected'))
+                : Center(
+                    child: FittedBox(
+                    child: SizedBox(
+                      width: _image.width.toDouble(),
+                      height: _image.height.toDouble(),
+                      child: CustomPaint(
+                        painter: FacePainter(_image, _faces),
+                      ),
+                    ),
+                  )));
   }
 
   _getImage() async {
@@ -69,13 +64,10 @@ class FaceDetectionState extends State<FaceDetection>
   _loadImage(File file) async {
     final data = await file.readAsBytes();
     await decodeImageFromList(data).then((value) => setState(() {
-      _image = value;
-      isLoading = false;
-    }));
+          _image = value;
+          isLoading = false;
+        }));
   }
-
-
-
 }
 
 class FacePainter extends CustomPainter {
@@ -107,4 +99,3 @@ class FacePainter extends CustomPainter {
     return image != old.image || faces != old.faces;
   }
 }
-

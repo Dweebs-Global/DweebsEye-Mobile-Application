@@ -1,10 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'homepage.dart';
-import 'login.dart';
+import 'authentication/login.dart';
 
-void main() async {
+Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +18,8 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   static final String title = "DweebsEye";
-  CameraDescription firstCamera;
-  MyApp(CameraDescription firstCamera)
-  {
-    this.firstCamera = firstCamera;
-  }
+  final CameraDescription firstCamera;
+  MyApp(this.firstCamera);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: new Login(title,firstCamera),
+      home: new Login(title, firstCamera),
     );
   }
 }
