@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dweebs_eye/oauth_b2c_integration/oauth_flow.dart';
 import 'package:dweebs_eye/platform/mobile.dart';
 import 'package:dweebs_eye/platform/myplatform.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -108,12 +109,24 @@ class LoginState extends State<Login> {
       final User fireBaseUser =
           (await authService.signInWithCredential(credential)).user;
       if (fireBaseUser != null) {
+        /*
+        Use this route for OAuth B2C Flow
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  OAuthFlow(title: "OAuth Login Flow",),
+        ));
+
+         */
+
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
                   HomePage(this.title, this.cameraDescription)),
         );
+
       }
     } catch (error) {
       print(error);
