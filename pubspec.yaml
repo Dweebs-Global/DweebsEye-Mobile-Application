@@ -34,6 +34,7 @@ dependencies:
   google_sign_in: ^4.5.6
   image_picker: ^0.6.7+17
   aad_oauth: ^0.2.1
+  simple_ocr_plugin: ^0.1.1
 
 
   # The following adds the Cupertino Icons font to your application.

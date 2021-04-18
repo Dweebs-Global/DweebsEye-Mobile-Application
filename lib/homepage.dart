@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:dweebs_eye/face_detection/face_detection.dart';
 import 'package:dweebs_eye/input_output/takesnapshot.dart';
+import 'package:dweebs_eye/text_recognition/textrecognition.dart';
 import 'package:flutter/material.dart';
 import 'input_output/mic_speech.dart';
 import 'input_output/speaker_audio.dart';
@@ -126,7 +127,6 @@ class _HomePageState extends State<HomePage> {
               final text = userSpeech.toLowerCase();
               final List textList = text.split(' ');
               if (textList.contains(Command.object) ||
-                  (textList.contains(Command.text)) ||
                   (textList.contains(Command.car))) {
                 execute();
               }
@@ -136,6 +136,16 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => FaceDetection(
+                      ),
+                    ),
+                  );
+                }
+              else if (text.contains(Command.text))
+                {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TextRecognition(
                       ),
                     ),
                   );
