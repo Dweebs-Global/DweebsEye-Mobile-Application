@@ -1,9 +1,13 @@
+import 'package:dweebs_eye/input_output/mic_speech.dart';
+import 'package:dweebs_eye/input_output/speaker_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
+
+import '../homepage.dart';
 
 class FaceDetection extends StatefulWidget {
   @override
@@ -18,6 +22,9 @@ class FaceDetectionState extends State<FaceDetection> {
   bool isLoading = false;
   ui.Image _image;
   final picker = ImagePicker();
+  bool isPlaying = true;
+  String userSpeech = '';
+  bool isListening = true;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,13 @@ class FaceDetectionState extends State<FaceDetection> {
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : (_imageFile == null)
-                ? Center(child: Text('no image selected'))
+                ? GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Center(child: Text('no image selected')),
+          onTap: () => {
+            _getImage()
+          },
+        )
                 : Center(
                     child: FittedBox(
                     child: SizedBox(
@@ -67,6 +80,71 @@ class FaceDetectionState extends State<FaceDetection> {
           _image = value;
           isLoading = false;
         }));
+    playAudio("Upload image to server? Please read out Yes or No");
+    toggleRecording();
+
+  }
+
+  Future toggleRecording() => MicSpeech.toggleRecording(
+    // show the recognized text on the screen
+    onResult: (speech) {
+      setState(() => userSpeech = speech);
+    },
+    // flag reflecting the state of mic
+    onListening: (isListening) {
+      setState(() => this.isListening = isListening);
+      if (!isListening) {
+        // when mic is not active anymore
+        setState(() {
+          isPlaying = true; // flag to disable mic button after listening
+        });
+
+        Future.delayed(Duration(milliseconds: 500), () {
+          // check the command sent from mic
+          // and take a photo after right commands
+          final text = userSpeech.toLowerCase();
+          final List textList = text.split(' ');
+          if (textList.contains(Command.yes)){
+
+          }
+          else if (textList.contains(Command.no))
+            {
+              setState(() {
+                this._imageFile = null;
+              });
+            }
+          else if (text.isNotEmpty) {
+            playAudio('Unknown command');
+          } else {
+            // if nothing was said, run playAudio with ' '
+            playAudio(' '); // to activate the mic again
+          }
+          setState(
+                  () => userSpeech = ''); // set the speech to default
+        });
+      }
+    },
+  );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    playAudio("Please Tap on the screen to select an image from gallery, or please read out Camera to capture an image");
+
+  }
+
+  playAudio(String text) async {
+    await SpeakerAudio.playAudio(
+      // play audio after the photo is taken
+        text: text,
+        onPlaying: (isPlaying) {
+          // flag reflecting the state of speaker
+          setState(() {
+            this.isPlaying =
+                isPlaying; // flag to enable mic button after speaking
+          });
+        });
   }
 }
 
