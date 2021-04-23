@@ -2,12 +2,15 @@ import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'authentication/login.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // load environment variables from .env
+  await DotEnv.load();
   // Obtain a list of the available cameras on the device.
   final cameras = await availableCameras();
 
