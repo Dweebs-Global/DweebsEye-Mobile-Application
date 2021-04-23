@@ -61,6 +61,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // notify user of arriving at main page only after widget is build
+      playAudio('Start using Dweebs Eye');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -129,18 +138,14 @@ class _HomePageState extends State<HomePage> {
                   (textList.contains(Command.text)) ||
                   (textList.contains(Command.car))) {
                 execute();
-              }
-              else if (text.contains(Command.face))
-                {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FaceDetection(
-                      ),
-                    ),
-                  );
-                }
-              else if (text.isNotEmpty) {
+              } else if (text.contains(Command.face)) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FaceDetection(),
+                  ),
+                );
+              } else if (text.isNotEmpty) {
                 playAudio('Unknown command');
               } else {
                 // if nothing was said, run playAudio with ' '
