@@ -1,7 +1,12 @@
 import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'b2c_config.dart';
+import '../../homepage.dart';
+
+// TODO: automate login process and add audio interaction if interactive sign in required
 
 class OAuthFlow extends StatefulWidget {
   OAuthFlow({Key key, this.title}) : super(key: key);
@@ -12,12 +17,7 @@ class OAuthFlow extends StatefulWidget {
 }
 
 class _OAuthFlowState extends State<OAuthFlow> {
-  static final Config config = Config(
-    tenant: 'YOUR_TENANT_ID',
-    clientId: 'YOUR_CLIENT_ID',
-    scope: 'openid profile offline_access',
-    redirectUri: 'https://login.live.com/oauth20_desktop.srf',
-  );
+  static final Config config = B2Cconfig.config;
   final AadOAuth oauth = AadOAuth(config);
 
   @override
@@ -25,7 +25,7 @@ class _OAuthFlowState extends State<OAuthFlow> {
     // adjust window size for browser login
     var screenSize = MediaQuery.of(context).size;
     var rectSize =
-    Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
+        Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
     oauth.setWebViewScreenSize(rectSize);
 
     return Scaffold(
@@ -79,6 +79,13 @@ class _OAuthFlowState extends State<OAuthFlow> {
       await oauth.login();
       var accessToken = await oauth.getAccessToken();
       showMessage('Logged in successfully, your access token: $accessToken');
+      // after logging in go back to login page
+      final cameras = await availableCameras();
+      final firstCamera = cameras.first;
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePage("DweebsEye", firstCamera)));
     } catch (e) {
       showError(e);
     }
