@@ -33,6 +33,8 @@ dependencies:
   firebase_auth: ^0.18.4+1
   google_sign_in: ^4.5.6
   image_picker: ^0.6.7+17
+  aad_oauth: ^0.2.1
+  flutter_dotenv: ^3.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -63,6 +65,7 @@ flutter:
     - assets/sounds/speech_to_text_cancel.m4r
     - assets/sounds/speech_to_text_stop.m4r
     - assets/images/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

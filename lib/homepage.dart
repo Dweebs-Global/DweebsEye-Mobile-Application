@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dweebs_eye/face_detection/face_detection.dart';
 import 'package:dweebs_eye/input_output/takesnapshot.dart';
 import 'package:flutter/material.dart';
 import 'input_output/mic_speech.dart';
@@ -10,6 +11,8 @@ class Command {
   static const face = 'face';
   static const text = 'text';
   static const car = 'car';
+  static const yes = 'yes';
+  static const no = 'no';
 }
 
 class HomePage extends StatefulWidget {
@@ -55,6 +58,15 @@ class _HomePageState extends State<HomePage> {
                 isPlaying; // flag to enable mic button after speaking
           });
         });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // notify user of arriving at main page only after widget is build
+      playAudio('Start using Dweebs Eye');
+    });
   }
 
   @override
@@ -123,10 +135,16 @@ class _HomePageState extends State<HomePage> {
               final text = userSpeech.toLowerCase();
               final List textList = text.split(' ');
               if (textList.contains(Command.object) ||
-                  (textList.contains(Command.face)) ||
                   (textList.contains(Command.text)) ||
                   (textList.contains(Command.car))) {
                 execute();
+              } else if (text.contains(Command.face)) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FaceDetection(),
+                  ),
+                );
               } else if (text.isNotEmpty) {
                 playAudio('Unknown command');
               } else {
