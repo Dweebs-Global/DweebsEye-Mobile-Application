@@ -71,34 +71,38 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 60.0),
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.headline4,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(widget.title),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 60.0),
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.headline4,
+            ),
           ),
         ),
-      ),
-      floatingActionButton: Container(
-        height: 150,
-        width: 150,
-        child: FloatingActionButton(
-          child: Icon(
-            isListening ? Icons.mic : Icons.mic_none,
-            size: 70.0,
+        floatingActionButton: Container(
+          height: 150,
+          width: 150,
+          child: FloatingActionButton(
+            child: Icon(
+              isListening ? Icons.mic : Icons.mic_none,
+              size: 70.0,
+            ),
+            tooltip: "Get microphone input",
+            onPressed: isPlaying ? null : toggleRecording,
+            backgroundColor: isPlaying ? Colors.grey : Colors.teal,
           ),
-          tooltip: "Get microphone input",
-          onPressed: isPlaying ? null : toggleRecording,
-          backgroundColor: isPlaying ? Colors.grey : Colors.teal,
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -111,6 +115,8 @@ class _HomePageState extends State<HomePage> {
         // flag reflecting the state of mic
         onListening: (isListening) {
           setState(() => this.isListening = isListening);
+
+          print('isListening: $isListening');
           if (!isListening) {
             // when mic is not active anymore
             setState(() {
@@ -145,6 +151,12 @@ class _HomePageState extends State<HomePage> {
                     builder: (context) => FaceDetection(),
                   ),
                 );
+                Future.delayed(Duration(milliseconds: 500), () {
+                  setState(() {
+                    isPlaying =
+                        false; // flag to set the inactive state of speaker
+                  });
+                });
               } else if (text.isNotEmpty) {
                 playAudio('Unknown command');
               } else {
@@ -154,6 +166,11 @@ class _HomePageState extends State<HomePage> {
               setState(
                   () => userSpeech = ''); // set the speech and photo to default
               photo = null; // in case next time no command and no photo
+            });
+          } else {
+            // case when mic is active (if (isListening))
+            setState(() {
+              isPlaying = false; // flag to set the inactive state of speaker
             });
           }
         },
