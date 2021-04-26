@@ -29,6 +29,11 @@ class FaceDetectionState extends State<FaceDetection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        // adding bar with name and back button
+        appBar: AppBar(
+          title: Text('DweebsEye Face Detection'),
+          centerTitle: true,
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: _getImage,
           child: Icon(Icons.add_a_photo),

@@ -1,6 +1,9 @@
 import 'package:aad_oauth/model/config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// make sure to always have "offline_access" in scope parameter for
+// refresh token flow to work (getting access token without logging in)
+
 class B2Cconfig {
   static final Config config = Config(
       tenant: env['TENANT'],
