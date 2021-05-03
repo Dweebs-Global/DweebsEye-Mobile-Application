@@ -9,7 +9,7 @@ class B2Cconfig {
       tenant: env['TENANT'],
       clientId: env['CLIENT_ID'],
       scope: env['SCOPE'],
-      redirectUri: 'https://login.live.com/oauth20_desktop.srf',
+      redirectUri: 'https://${env['TENANT']}.b2clogin.com/oauth2/nativeclient',
       isB2C: true,
       policy: env['POLICY'],
       tokenIdentifier: env['TOKEN_IDENTIFIER'],

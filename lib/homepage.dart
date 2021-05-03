@@ -8,6 +8,7 @@ import 'package:dweebs_eye/input_output/takesnapshot.dart';
 import 'package:flutter/material.dart';
 import 'input_output/mic_speech.dart';
 import 'input_output/speaker_audio.dart';
+import 'face_detection/face_recognition.dart';
 
 class Command {
   // all commands triggering the main app functions
@@ -209,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FaceDetection(),
+                    builder: (context) => FaceRecognition(),
                   ),
                 );
                 Future.delayed(Duration(milliseconds: 500), () {
