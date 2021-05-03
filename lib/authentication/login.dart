@@ -100,7 +100,6 @@ class LoginState extends State<Login> {
   {
       _speak(
           "Welcome to Dweebs-Eye Application. Please tap on the screen to get started!");
-
   }
 
   loginWithGoogle() async {

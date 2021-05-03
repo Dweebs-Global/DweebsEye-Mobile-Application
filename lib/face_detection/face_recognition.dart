@@ -25,16 +25,19 @@ class FaceRecognitionState extends State<FaceRecognition> {
   CameraController _camera;
   var interpreter;
   bool _isDetecting = false;
+
   CameraLensDirection _direction = CameraLensDirection.back;
   dynamic data = {};
   double threshold = 1.0;
   Directory tempDir;
   List e1;
   bool _faceFound = false;
+
   List<String> resultFaces = [];
   bool isPlaying = false;
   bool isListening = false;
   String userSpeech = '';
+
   final TextEditingController _name = new TextEditingController();
   @override
   void initState() {
@@ -123,6 +126,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
               res = _recog(croppedImage);
               // int endTime = new DateTime.now().millisecondsSinceEpoch;
               // print("Inference took ${endTime - startTime}ms");
+
               if (!resultFaces.contains(res))
                 {
                   print('Here');
@@ -130,6 +134,8 @@ class FaceRecognitionState extends State<FaceRecognition> {
                   finalResult.add(res, _face);
                 }
 
+
+              finalResult.add(res, _face);
             }
             setState(() {
               _scanResults = finalResult;
@@ -199,6 +205,20 @@ class FaceRecognitionState extends State<FaceRecognition> {
           _addLabel();
         },
       );
+
+
+    return Container(
+      constraints: const BoxConstraints.expand(),
+      child: _camera == null
+          ? const Center(child: null)
+          : Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          CameraPreview(_camera),
+          _buildResults(),
+        ],
+      ),
+    );
 
   }
 
@@ -423,7 +443,6 @@ class FaceRecognitionState extends State<FaceRecognition> {
         getNameInput()
       },
     );
-
 
     showDialog(
         context: context,
