@@ -4,7 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'b2c_config.dart';
-import '../../homepage.dart';
+import 'package:dweebs_eye/homepage.dart';
 
 // TODO: automate login process and add audio interaction if interactive sign in required
 
