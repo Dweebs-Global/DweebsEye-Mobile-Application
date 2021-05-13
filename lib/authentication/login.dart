@@ -184,10 +184,8 @@ class LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            "Login to Dweebs Eye",
-            style: TextStyle(color: Colors.white),
-          ),
+          title: Text("Login to Dweebs Eye",
+              style: Theme.of(context).appBarTheme.textTheme.headline5),
         ),
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,

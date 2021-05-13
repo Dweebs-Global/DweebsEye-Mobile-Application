@@ -140,7 +140,10 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text(widget.title),
+          title: Text(
+            widget.title,
+            style: Theme.of(context).appBarTheme.textTheme.headline5,
+          ),
           centerTitle: true,
         ),
         body: Center(
@@ -162,7 +165,7 @@ class _HomePageState extends State<HomePage> {
             ),
             tooltip: "Microphone",
             onPressed: isPlaying ? null : toggleRecording,
-            backgroundColor: isPlaying ? Colors.grey : Colors.teal,
+            backgroundColor: isPlaying ? Colors.grey : Colors.teal[700],
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

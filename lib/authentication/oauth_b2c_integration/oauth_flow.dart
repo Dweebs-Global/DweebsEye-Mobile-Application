@@ -53,7 +53,8 @@ class _OAuthFlowState extends State<OAuthFlow> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text(widget.title),
+          title: Text(widget.title,
+              style: Theme.of(context).appBarTheme.textTheme.headline5),
         ),
         body: GestureDetector(
           // tap on the screen to login
@@ -62,7 +63,7 @@ class _OAuthFlowState extends State<OAuthFlow> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                  'Sign in to Dweebs Eye',
+                  'Sign in to use Dweebs Eye',
                   style: Theme.of(context).textTheme.headline4,
                 ),
               ),
