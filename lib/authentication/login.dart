@@ -123,9 +123,7 @@ class LoginState extends State<Login> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OAuthFlow(
-            title: "OAuth Login Flow",
-          ),
+          builder: (context) => OAuthFlow(this.title, this.cameraDescription),
         ),
       );
     } else {
@@ -166,9 +164,8 @@ class LoginState extends State<Login> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OAuthFlow(
-                  title: "OAuth Login Flow",
-                ),
+                builder: (context) =>
+                    OAuthFlow(this.title, this.cameraDescription),
               ));
         }
       }

@@ -1,8 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'authentication/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'authentication/login.dart';
+import 'authentication/oauth_b2c_integration/oauth_flow.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: new Login(title, firstCamera),
+      home: new OAuthFlow(title, firstCamera),
     );
   }
 }

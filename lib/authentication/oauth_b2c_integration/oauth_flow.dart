@@ -11,11 +11,15 @@ import 'package:dweebs_eye/homepage.dart';
 import '../../input_output/speaker_audio.dart';
 
 class OAuthFlow extends StatefulWidget {
-  OAuthFlow({Key key, this.title}) : super(key: key);
+  OAuthFlow(this.title, this.firstCamera);
+
   final String title;
+  final CameraDescription firstCamera;
 
   @override
-  _OAuthFlowState createState() => _OAuthFlowState();
+  State<OAuthFlow> createState() {
+    return _OAuthFlowState(this.title, this.firstCamera);
+  }
 }
 
 class _OAuthFlowState extends State<OAuthFlow> {
@@ -23,6 +27,9 @@ class _OAuthFlowState extends State<OAuthFlow> {
   final AadOAuth oauth = AadOAuth(config);
   bool isPlaying = false;
   static String userAgent = '';
+  String title;
+  CameraDescription firstCamera;
+  _OAuthFlowState(this.title, this.firstCamera);
 
   @override
   void initState() {
@@ -55,9 +62,17 @@ class _OAuthFlowState extends State<OAuthFlow> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                  'Sign in to use Dweebs Eye',
-                  style: Theme.of(context).textTheme.headline5,
+                  'Sign in to Dweebs Eye',
+                  style: Theme.of(context).textTheme.headline4,
                 ),
+              ),
+              // keep logout button for now for testing/debugging
+              ListTile(
+                leading: Icon(Icons.delete),
+                title: Text('Logout'),
+                onTap: () async {
+                  await oauth.logout();
+                },
               ),
             ],
           ),
@@ -71,30 +86,28 @@ class _OAuthFlowState extends State<OAuthFlow> {
 
   void login() async {
     try {
-      // check if refresh token exists
       var _authStorage = AuthStorage(tokenIdentifier: env['TOKEN_IDENTIFIER']);
       var token = await _authStorage.loadTokenFromCache();
-      if (!token.hasRefreshToken()) {
-        // if no refresh token available (first sign in or signed out on error),
-        // user will have to sign in manually, so give audio hint
-        getUserAgent();
-        playAudio(
-            'You are redirected to a sign-in webpage. You might need screen reader or other help for this step.');
-      } // if refresh token exists, app will try to get new access token programmatically
-      await oauth.login(); // sign in (with or without user interaction)
-      // after successful sign in, redirect user to homepage
+      if (!token.hasValidAccessToken()) {
+        if (!token.hasRefreshToken()) {
+          // if no refresh token available (first sign-in or signed out on error),
+          // user will have to sign in manually, so give audio hint
+          getUserAgent();
+          playAudio(
+              'You are redirected to a sign-in webpage. You might need screen reader or other help for this step.');
+        } // if refresh token exists, app will try to get new access token programmatically
+        await oauth.login(); // sign in (with or without user interaction)
+      }
+      // if valid access token existed or was acquired during sign-in, redirect to homepage
       token = await _authStorage.loadTokenFromCache();
       if (token.hasValidAccessToken()) {
-        // after logging in go back to login page
-        final cameras = await availableCameras();
-        final firstCamera = cameras.first;
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
                     HomePage("Start using Dweebs Eye", firstCamera)));
       } else {
-        // if no valid access token received for some reason, prompt user to try again
+        // if still no valid access token, prompt user to try again (rare case, most likely error arises)
         playAudio(
             'Something went wrong during sign in. Please tap on the screen to try again.');
       }
