@@ -1,9 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/helper/auth_storage.dart';
 import 'authentication/oauth_b2c_integration/b2c_config.dart';
-import 'package:dweebs_eye/face_detection/face_detection.dart';
 import 'package:dweebs_eye/input_output/takesnapshot.dart';
 import 'package:flutter/material.dart';
 import 'input_output/mic_speech.dart';
@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   bool isPlaying = false;
   bool isCapturing = false;
   XFile photo;
-  String text = 'Microphone input goes here.';
+  String text = 'Disable screen reader if using one.';
   String userSpeech = '';
   String currentCommand = '';
   CameraDescription firstCamera;
@@ -57,7 +57,6 @@ class _HomePageState extends State<HomePage> {
 
   playAudio(String text) async {
     await SpeakerAudio.playAudio(
-        // play audio after the photo is taken
         text: text,
         onPlaying: (isPlaying) {
           // flag reflecting the state of speaker
@@ -70,34 +69,35 @@ class _HomePageState extends State<HomePage> {
 
   Future<String> httpRequest() async {
     // getting access token for requests
-    var config = B2Cconfig.config;
-    var oauth = AadOAuth(config);
-    var _authStorage = AuthStorage(tokenIdentifier: "b2c_token");
-    var token = await _authStorage.loadTokenFromCache();
-    String accessToken;
-    String path;
-    if (token.hasValidAccessToken()) {
-      // if there is a valid access token, use it
-      accessToken = token.accessToken;
-    } else if (token.hasRefreshToken()) {
-      // otherwise get it with refresh token
-      await oauth.login();
-      accessToken = await oauth.getAccessToken();
-    } // ? implement else case (no refresh token -> go to b2c auth) ?
-    if (currentCommand == Command.object) {
-      path = '/api/object_detector';
-    } else if (currentCommand == Command.text) {
-      path = '/api/text_reader';
-    } else if (currentCommand == Command.detect) {
-      path = '/api/face_detector';
-    }
-    var url = Uri.https('dweebs-eye.azurewebsites.net', path);
-    var headers = <String, String>{
-      'Content-Type': 'image/jpeg',
-      'Authorization': 'Bearer $accessToken'
-    };
-    var body = await photo.readAsBytes();
     try {
+      var config = B2Cconfig.config;
+      var oauth = AadOAuth(config);
+      var _authStorage = AuthStorage(tokenIdentifier: env['TOKEN_IDENTIFIER']);
+      var token = await _authStorage.loadTokenFromCache();
+      String accessToken;
+      String path;
+      if (token.hasValidAccessToken()) {
+        // if there is a valid access token, use it
+        accessToken = token.accessToken;
+      } else if (token.hasRefreshToken()) {
+        // otherwise get it with refresh token
+        await oauth.login();
+        accessToken = await oauth.getAccessToken();
+      } // ? implement else case (no refresh token -> go to b2c auth) ?
+      if (currentCommand == Command.object) {
+        path = '/api/object_detector';
+      } else if (currentCommand == Command.text) {
+        path = '/api/text_reader';
+      } else if (currentCommand == Command.detect) {
+        path = '/api/face_detector';
+      }
+      var url = Uri.https(env['API_URL'], path);
+      var headers = <String, String>{
+        'Content-Type': 'image/jpeg',
+        'Authorization': 'Bearer $accessToken'
+      };
+      var body = await photo.readAsBytes();
+
       var response = await http.post(url, headers: headers, body: body);
       return response.body;
     } catch (e) {
@@ -140,7 +140,10 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text(widget.title),
+          title: Text(
+            widget.title,
+            style: Theme.of(context).appBarTheme.textTheme.headline5,
+          ),
           centerTitle: true,
         ),
         body: Center(
@@ -160,9 +163,9 @@ class _HomePageState extends State<HomePage> {
               isListening ? Icons.mic : Icons.mic_none,
               size: 70.0,
             ),
-            tooltip: "Get microphone input",
+            tooltip: "Microphone",
             onPressed: isPlaying ? null : toggleRecording,
-            backgroundColor: isPlaying ? Colors.grey : Colors.teal,
+            backgroundColor: isPlaying ? Colors.grey : Colors.teal[700],
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -205,7 +208,8 @@ class _HomePageState extends State<HomePage> {
                 currentCommand = Command.detect;
                 executeAPIFlow();
               } else if (textList.contains(Command.car)) {
-              } else if (textList.contains(Command.face) &&
+              } // "recognise face" command flow
+              else if (textList.contains(Command.face) &&
                   textList.contains(Command.recognise)) {
                 Navigator.push(
                   context,

@@ -1,5 +1,6 @@
 import 'package:aad_oauth/helper/auth_storage.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'oauth_b2c_integration/oauth_flow.dart';
 import 'package:dweebs_eye/platform/mobile.dart';
@@ -59,6 +60,12 @@ class LoginState extends State<Login> {
       });
     });
 
+    _flutterTts.setCancelHandler(() {
+      setState(() {
+        isPlaying = false;
+      });
+    });
+
     _flutterTts.setErrorHandler((err) {
       setState(() {
         print("error occurred: " + err);
@@ -81,16 +88,6 @@ class LoginState extends State<Login> {
     }
   }
 
-  // _stop is not referenced anywhere
-  //
-  // Future _stop() async {
-  //   var result = await _flutterTts.stop();
-  //   if (result == 1)
-  //     setState(() {
-  //       isPlaying = false;
-  //     });
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -101,9 +98,10 @@ class LoginState extends State<Login> {
     });
   }
 
-  checkIfUserLoggedIn() async
-  {
-    ProgressDialog pr = new ProgressDialog(context, type: ProgressDialogType.Normal,isDismissible: false);
+  checkIfUserLoggedIn() async {
+    // if user already signed in with firebase, send him to oauth login page
+    ProgressDialog pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(
         message: 'Please wait',
         borderRadius: 10.0,
@@ -114,23 +112,23 @@ class LoginState extends State<Login> {
         progressTextStyle: TextStyle(
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
-    );
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
     pr.show();
 
-    if (await FirebaseAuth.instance.currentUser != null) {
+    if (FirebaseAuth.instance.currentUser != null) {
       // signed in
       pr.hide().then((isHidden) {
         print(isHidden);
       });
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage(this.title, this.cameraDescription)),
+        MaterialPageRoute(
+          builder: (context) => OAuthFlow(this.title, this.cameraDescription),
+        ),
       );
     } else {
       _speak(
-          "Welcome to Dweebs-Eye Application. Please tap on the screen to get started!");
-
+          "Welcome to Dweebs Eye Application. Please tap on the screen to get started!");
     }
   }
 
@@ -150,7 +148,8 @@ class LoginState extends State<Login> {
       final User fireBaseUser =
           (await authService.signInWithCredential(credential)).user;
       if (fireBaseUser != null) {
-        var _authStorage = AuthStorage(tokenIdentifier: "b2c_token");
+        var _authStorage =
+            AuthStorage(tokenIdentifier: env['TOKEN_IDENTIFIER']);
         var token = await _authStorage.loadTokenFromCache();
         // if there is still a valid access token, go directly to Homepage
         if (token.hasValidAccessToken()) {
@@ -165,9 +164,8 @@ class LoginState extends State<Login> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OAuthFlow(
-                  title: "OAuth Login Flow",
-                ),
+                builder: (context) =>
+                    OAuthFlow(this.title, this.cameraDescription),
               ));
         }
       }
@@ -186,10 +184,8 @@ class LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            "Login to Dweebs Eye",
-            style: TextStyle(color: Colors.white),
-          ),
+          title: Text("Login to Dweebs Eye",
+              style: Theme.of(context).appBarTheme.textTheme.headline5),
         ),
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,

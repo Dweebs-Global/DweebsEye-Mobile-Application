@@ -24,13 +24,22 @@ class SpeakerAudio {
       isPlaying = false;
       onPlaying(isPlaying);
     });
+    _audio.setCancelHandler(() {
+      isPlaying = false;
+      onPlaying(isPlaying);
+    });
+    _audio.setErrorHandler((message) {
+      print('error: $message');
+      isPlaying = false;
+      onPlaying(isPlaying);
+    });
 
     await _audio.setLanguage(lang);
     await _audio.setSpeechRate(speechRate);
     await _audio.setPitch(pitch);
-    await _audio.awaitSpeakCompletion(true);
     if (text != null) {
       if (text.isNotEmpty) {
+        await _audio.awaitSpeakCompletion(true);
         await _audio.speak(text);
       }
     }

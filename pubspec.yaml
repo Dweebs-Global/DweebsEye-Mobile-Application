@@ -38,6 +38,7 @@ dependencies:
   tflite_flutter: ^0.4.1
   image: ^2.1.12
   progress_dialog: ^1.2.0
+  flutter_user_agent: ^1.2.2
 
 
   # The following adds the Cupertino Icons font to your application.

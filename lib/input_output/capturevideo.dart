@@ -47,7 +47,8 @@ class _VideoRecorderExampleState extends State<VideoRecorderExample> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Camera example'),
+        title: Text('Camera example',
+            style: Theme.of(context).appBarTheme.textTheme.headline5),
       ),
       body: Column(
         children: <Widget>[
