@@ -33,11 +33,11 @@ class FaceRecognitionState extends State<FaceRecognition> {
   List e1;
   bool _faceFound = false;
 
+
   List<String> resultFaces = [];
   bool isPlaying = false;
   bool isListening = false;
   String userSpeech = '';
-
   final TextEditingController _name = new TextEditingController();
   @override
   void initState() {

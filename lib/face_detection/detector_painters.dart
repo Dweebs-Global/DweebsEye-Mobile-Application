@@ -14,18 +14,6 @@ class FaceDetectorPainter extends CustomPainter {
   List<String> persons = [];
   bool isPlaying = false;
 
-  playAudio(String text) async {
-    if (this.isPlaying == false) {
-      await SpeakerAudio.playAudio(
-        // play audio after the photo is taken
-          text: text,
-          onPlaying: (isPlaying) {
-            // flag reflecting the state of speaker
-            this.isPlaying = isPlaying;
-          });
-    }
-
-
     playAudio(String text) async {
       await SpeakerAudio.playAudio(
         // play audio after the photo is taken
@@ -36,26 +24,22 @@ class FaceDetectorPainter extends CustomPainter {
           });
     }
 
-    @override
-    void paint(Canvas canvas, Size size) {
-      final Paint paint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3.0
-        ..color = Colors.greenAccent;
-      for (String label in results.keys) {
-        for (Face face in results[label]) {
-          if (!persons.contains(label)) {
-            if (label == "NOT RECOGNIZED") {
-              persons.add("Face Not Recognized. Please tap on screen to save.");
-            }
-            else {
-              persons.add(label);
-            }
-          }
 
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0
+      ..color = Colors.greenAccent;
+    for (String label in results.keys) {
+      for (Face face in results[label]) {
+        if (label != "NOT RECOGNIZED")
+          {
+            if (!persons.contains(label))
+              {
+                persons.add(label);
+              }
 
-          if (label != "NOT RECOGNIZED") {
-            persons.add(label);
           }
 
           // face = results[label];
@@ -117,8 +101,7 @@ class FaceDetectorPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+  bool shouldRepaint(CustomPainter oldDelegate) {
     // TODO: implement shouldRepaint
     throw UnimplementedError();
   }
-}
