@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dweebs_eye/car_detection/car_detection.dart';
 import 'package:http/http.dart' as http;
 import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/helper/auth_storage.dart';
@@ -132,6 +133,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -204,6 +206,12 @@ class _HomePageState extends State<HomePage> {
                 currentCommand = Command.detect;
                 executeAPIFlow();
               } else if (textList.contains(Command.car)) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CarDetection(),
+                  ),
+                );
               } else if (textList.contains(Command.face) &&
                   textList.contains(Command.recognise)) {
                 Navigator.push(

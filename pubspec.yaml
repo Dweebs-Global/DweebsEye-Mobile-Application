@@ -35,6 +35,10 @@ dependencies:
   image_picker: ^0.6.7+17
   aad_oauth: ^0.2.1
   flutter_dotenv: ^3.1.0
+  flutter_speed_dial:
+  carousel_slider: ^3.0.0
+  tflite:
+  progress_dialog: ^1.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -66,6 +70,9 @@ flutter:
     - assets/sounds/speech_to_text_stop.m4r
     - assets/images/
     - .env
+    - assets/cars/
+    - assets/labels.txt
+    - assets/model_unquant.tflite
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

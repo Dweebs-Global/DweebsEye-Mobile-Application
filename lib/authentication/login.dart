@@ -1,5 +1,6 @@
 import 'package:aad_oauth/helper/auth_storage.dart';
 import 'package:camera/camera.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'oauth_b2c_integration/oauth_flow.dart';
 import 'package:dweebs_eye/platform/mobile.dart';
 import 'package:dweebs_eye/platform/myplatform.dart';
@@ -96,10 +97,43 @@ class LoginState extends State<Login> {
     initializeTts();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // play welcome greetings only after widget is build
-      _speak(
-          "Welcome to Dweebs-Eye Application. Please tap on the screen to get started!");
+      checkIfUserLoggedIn();
     });
   }
+
+  checkIfUserLoggedIn() async
+  {
+    ProgressDialog pr = new ProgressDialog(context, type: ProgressDialogType.Normal,isDismissible: false);
+    pr.style(
+        message: 'Please wait',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
+    );
+    pr.show();
+
+    if (await FirebaseAuth.instance.currentUser != null) {
+      // signed in
+      pr.hide().then((isHidden) {
+        print(isHidden);
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(this.title, this.cameraDescription)),
+      );
+    } else {
+      _speak(
+          "Welcome to Dweebs-Eye Application. Please tap on the screen to get started!");
+
+    }
+  }
+
 
   loginWithGoogle() async {
     try {
