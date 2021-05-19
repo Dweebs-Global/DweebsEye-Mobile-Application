@@ -11,15 +11,21 @@ class FaceDetectorPainter extends CustomPainter {
   dynamic results;
   Face face;
   List<String> persons =[];
+  bool isPlaying = false;
 
   playAudio(String text) async {
-    await SpeakerAudio.playAudio(
-      // play audio after the photo is taken
-        text: text,
-        onPlaying: (isPlaying) {
-          // flag reflecting the state of speaker
+    if (this.isPlaying == false)
+      {
+        await SpeakerAudio.playAudio(
+          // play audio after the photo is taken
+            text: text,
+            onPlaying: (isPlaying) {
+              // flag reflecting the state of speaker
+              this.isPlaying = isPlaying;
 
-        });
+            });
+      }
+
   }
 
   @override
@@ -32,7 +38,11 @@ class FaceDetectorPainter extends CustomPainter {
       for (Face face in results[label]) {
         if (label != "NOT RECOGNIZED")
           {
-            persons.add(label);
+            if (!persons.contains(label))
+              {
+                persons.add(label);
+              }
+
           }
         // face = results[label];
         scaleX = size.width / imageSize.width;

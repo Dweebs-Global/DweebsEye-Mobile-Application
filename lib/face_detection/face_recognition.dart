@@ -23,12 +23,13 @@ class FaceRecognitionState extends State<FaceRecognition> {
   CameraController _camera;
   var interpreter;
   bool _isDetecting = false;
-  CameraLensDirection _direction = CameraLensDirection.front;
+  CameraLensDirection _direction = CameraLensDirection.back;
   dynamic data = {};
   double threshold = 1.0;
   Directory tempDir;
   List e1;
   bool _faceFound = false;
+  List<String> resultFaces = [];
   final TextEditingController _name = new TextEditingController();
   @override
   void initState() {
@@ -104,7 +105,13 @@ class FaceRecognitionState extends State<FaceRecognition> {
               res = _recog(croppedImage);
               // int endTime = new DateTime.now().millisecondsSinceEpoch;
               // print("Inference took ${endTime - startTime}ms");
-              finalResult.add(res, _face);
+              if (!resultFaces.contains(res))
+                {
+                  print('Here');
+                  resultFaces.add(res);
+                  finalResult.add(res, _face);
+                }
+
             }
             setState(() {
               _scanResults = finalResult;
