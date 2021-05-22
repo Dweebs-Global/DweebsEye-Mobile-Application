@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dweebs_eye/input_output/speaker_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -59,6 +60,15 @@ class FaceRecognitionState extends State<FaceRecognition> {
     }
   }
 
+  playAudio(String text) async {
+    await SpeakerAudio.playAudio(
+        // play audio after the photo is taken
+        text: text,
+        onPlaying: (isPlaying) {
+          // flag reflecting the state of speaker
+        });
+  }
+
   void _initializeCamera() async {
     await loadModel();
     CameraDescription description = await getCamera(_direction);
@@ -104,13 +114,11 @@ class FaceRecognitionState extends State<FaceRecognition> {
               res = _recog(croppedImage);
               // int endTime = new DateTime.now().millisecondsSinceEpoch;
               // print("Inference took ${endTime - startTime}ms");
-              if (!resultFaces.contains(res))
-                {
-                  print('Here');
-                  resultFaces.add(res);
-                  finalResult.add(res, _face);
-                }
-
+              if (!resultFaces.contains(res)) {
+                print('Here');
+                resultFaces.add(res);
+                finalResult.add(res, _face);
+              }
             }
             setState(() {
               _scanResults = finalResult;
