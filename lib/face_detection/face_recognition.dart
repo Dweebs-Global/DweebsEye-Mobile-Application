@@ -206,7 +206,6 @@ class FaceRecognitionState extends State<FaceRecognition> {
         },
       );
 
-
     return Container(
       constraints: const BoxConstraints.expand(),
       child: _camera == null

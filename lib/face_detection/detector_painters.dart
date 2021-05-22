@@ -33,13 +33,18 @@ class FaceDetectorPainter extends CustomPainter {
       ..color = Colors.greenAccent;
     for (String label in results.keys) {
       for (Face face in results[label]) {
-        if (label != "NOT RECOGNIZED")
-          {
             if (!persons.contains(label))
               {
-                persons.add(label);
-              }
+                if (label == "NOT RECOGNIZED")
+                  {
+                    persons.add("Face Not Recognized. Please tap on screen to save.");
+                  }
+                else
+                  {
+                    persons.add(label);
+                  }
 
+              }
           }
 
           // face = results[label];
@@ -67,7 +72,6 @@ class FaceDetectorPainter extends CustomPainter {
                   size.width - (60 + face.boundingBox.left.toDouble()) * scaleX,
                   (face.boundingBox.top.toDouble() - 10) * scaleY));
         }
-      }
       String identifiedPersons = "";
       for (String person in persons) {
         identifiedPersons += person;
@@ -95,13 +99,3 @@ class FaceDetectorPainter extends CustomPainter {
         Radius.circular(10));
   }
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    throw UnimplementedError();
-  }
