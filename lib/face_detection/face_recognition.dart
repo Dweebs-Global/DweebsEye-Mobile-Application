@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dweebs_eye/input_output/speaker_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -58,6 +59,19 @@ class FaceRecognitionState extends State<FaceRecognition> {
     } on Exception {
       print('Failed to load model.');
     }
+  }
+
+  playAudio(String text) async {
+
+      await SpeakerAudio.playAudio(
+        // play audio after the photo is taken
+          text: text,
+          onPlaying: (isPlaying) {
+            // flag reflecting the state of speaker
+
+          });
+
+
   }
 
   void _initializeCamera() async {
@@ -163,18 +177,25 @@ class FaceRecognitionState extends State<FaceRecognition> {
       );
     }
 
-    return Container(
-      constraints: const BoxConstraints.expand(),
-      child: _camera == null
-          ? const Center(child: null)
-          : Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          CameraPreview(_camera),
-          _buildResults(),
-        ],
-      ),
-    );
+    return
+      GestureDetector(
+        child: Container(
+          constraints: const BoxConstraints.expand(),
+          child: _camera == null
+              ? const Center(child: null)
+              : Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              CameraPreview(_camera),
+              _buildResults(),
+            ],
+          ),
+        ),
+        onTap: (){
+          _addLabel();
+        },
+      );
+
   }
 
   void _toggleCameraDirection() async {
