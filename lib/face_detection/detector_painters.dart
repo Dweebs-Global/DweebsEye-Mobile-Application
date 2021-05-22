@@ -36,14 +36,20 @@ class FaceDetectorPainter extends CustomPainter {
       ..color = Colors.greenAccent;
     for (String label in results.keys) {
       for (Face face in results[label]) {
-        if (label != "NOT RECOGNIZED")
-          {
             if (!persons.contains(label))
               {
-                persons.add(label);
+                if (label == "NOT RECOGNIZED")
+                  {
+                    persons.add("Face Not Recognized. Please tap on screen to save.");
+                  }
+                else
+                  {
+                    persons.add(label);
+                  }
+
               }
 
-          }
+
         // face = results[label];
         scaleX = size.width / imageSize.width;
         scaleY = size.height / imageSize.height;
