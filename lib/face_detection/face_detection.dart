@@ -3,7 +3,6 @@ import 'package:dweebs_eye/input_output/speaker_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -21,7 +20,6 @@ class FaceDetectionState extends State<FaceDetection> {
   List<Face> _faces;
   bool isLoading = false;
   ui.Image _image;
-  final picker = ImagePicker();
   bool isPlaying = true;
   String userSpeech = '';
   bool isListening = true;

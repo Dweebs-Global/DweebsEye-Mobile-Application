@@ -5,11 +5,9 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'oauth_b2c_integration/oauth_flow.dart';
 import 'package:dweebs_eye/platform/mobile.dart';
 import 'package:dweebs_eye/platform/myplatform.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import 'auth_service.dart';
 import '../homepage.dart';
@@ -27,12 +25,9 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-  final auth = FirebaseAuth.instance;
   final authService = AuthService();
-  final googleSignIn = GoogleSignIn(scopes: ['email']);
   String title;
   CameraDescription cameraDescription;
-  Stream<User> get currentUser => authService.currentUser;
   bool isPlaying = false;
   FlutterTts _flutterTts;
   LoginState(this.title, this.cameraDescription);
@@ -178,6 +173,16 @@ class LoginState extends State<Login> {
   void dispose() {
     super.dispose();
     _flutterTts.stop();
+  }
+
+  void loginWithGoogle() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OAuthFlow(
+            title: "OAuth Login Flow",
+          ),
+        ));
   }
 
   @override
