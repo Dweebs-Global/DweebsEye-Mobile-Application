@@ -315,6 +315,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
 
   String compare(List currEmb) {
     if (data.length == 0) return "No Face saved";
+    if (data.length == 0) return "Face Not Recognized. Please tap on screen to save.";
     double minDist = 999;
     double currDist = 0.0;
     String predRes = "NOT RECOGNIZED";
@@ -434,6 +435,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
 
   void getNameInput() async
   {
+    print('Get name input called');
     if (this.isPlaying == false)
     {
       await SpeakerAudio.playAudio(
@@ -453,6 +455,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
     // show the recognized text on the screen
     onResult: (speech) {
       //print('Name: '+speech);
+      print('Name: '+speech);
       _handle(speech.toString().toUpperCase());
       setState(() => userSpeech = speech);
     },

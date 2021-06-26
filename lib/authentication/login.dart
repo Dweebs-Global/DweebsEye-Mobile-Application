@@ -7,7 +7,6 @@ import 'package:dweebs_eye/platform/myplatform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
 import 'auth_service.dart';
 import '../homepage.dart';
 
@@ -104,6 +103,8 @@ class LoginState extends State<Login> {
   }
 
   loginWithGoogle() async {
+    _speak(
+        "Welcome to Dweebs-Eye Application. Please tap on the screen to get started!");
 
           // route for OAuth B2C Flow
           Navigator.push(
@@ -114,6 +115,31 @@ class LoginState extends State<Login> {
                 ),
               ));
         }
+    /*
+    ProgressDialog pr = new ProgressDialog(context, type: ProgressDialogType.Normal,isDismissible: false);
+    pr.style(
+        message: 'Please wait',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
+    );
+    pr.show();
+
+     */
+
+    /*
+    pr.hide().then((isHidden) {
+      print(isHidden);
+    });
+
+     */
+
 
   @override
   void dispose() {
