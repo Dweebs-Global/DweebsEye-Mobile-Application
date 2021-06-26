@@ -452,7 +452,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
   Future toggleRecording() => MicSpeech.toggleRecording(
     // show the recognized text on the screen
     onResult: (speech) {
-      print('Name: '+speech);
+      //print('Name: '+speech);
       _handle(speech.toString().toUpperCase());
       setState(() => userSpeech = speech);
     },
