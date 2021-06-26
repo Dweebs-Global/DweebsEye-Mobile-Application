@@ -7,7 +7,6 @@ import 'package:dweebs_eye/platform/myplatform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
 import 'auth_service.dart';
 import '../homepage.dart';
 
@@ -104,15 +103,8 @@ class LoginState extends State<Login> {
 
   loginWithGoogle() async {
 
-          // route for OAuth B2C Flow
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OAuthFlow(
-                  title: "OAuth Login Flow",
-                ),
-              ));
-        }
+  }
+
 
   @override
   void dispose() {

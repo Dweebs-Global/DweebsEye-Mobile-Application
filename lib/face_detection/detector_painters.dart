@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 class FaceDetectorPainter extends CustomPainter {
   FaceDetectorPainter(this.imageSize, this.results);
 
+
   final Size imageSize;
   double scaleX, scaleY;
   dynamic results;
@@ -98,4 +99,7 @@ class FaceDetectorPainter extends CustomPainter {
         rect.bottom.toDouble() * scaleY,
         Radius.circular(10));
   }
+
+
+
 
