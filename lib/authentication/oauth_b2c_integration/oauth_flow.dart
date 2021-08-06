@@ -1,6 +1,7 @@
 import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:camera/camera.dart';
+import 'package:dweebs_eye/newscreens/viewpager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'b2c_config.dart';
@@ -85,7 +86,14 @@ class _OAuthFlowState extends State<OAuthFlow> {
       Navigator.push(
           context,
           MaterialPageRoute(
+              builder: (context) => Menu()));
+      /*
+      Navigator.push(
+          context,
+          MaterialPageRoute(
               builder: (context) => HomePage("DweebsEye", firstCamera)));
+
+       */
     } catch (e) {
       showError(e);
     }
