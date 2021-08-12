@@ -70,7 +70,7 @@ class _OAuthFlowState extends State<OAuthFlow> {
               // keep logout button for now for testing/debugging
               ListTile(
                 leading: Icon(Icons.delete),
-                title: Text('Logout'),
+                title:  Text('Logout'),
                 onTap: () async {
                   await oauth.logout();
                 },

@@ -3,7 +3,6 @@ import 'package:dweebs_eye/input_output/speaker_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -21,7 +20,6 @@ class FaceDetectionState extends State<FaceDetection> {
   List<Face> _faces;
   bool isLoading = false;
   ui.Image _image;
-  final picker = ImagePicker();
   bool isPlaying = true;
   String userSpeech = '';
   bool isListening = true;
@@ -60,27 +58,6 @@ class FaceDetectionState extends State<FaceDetection> {
   }
 
   _getImage() async {
-    final imageFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      isLoading = true;
-    });
-    // exception occurs here if device "back" button is pushed without choosing file
-    // that's why adding try/catch block
-    try {
-      final image = FirebaseVisionImage.fromFile(File(imageFile.path));
-      final faceDetector = FirebaseVision.instance.faceDetector();
-      List<Face> faces = await faceDetector.processImage(image);
-
-      if (mounted) {
-        setState(() {
-          _imageFile = File(imageFile.path);
-          _faces = faces;
-          _loadImage(File(imageFile.path));
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 
   _loadImage(File file) async {

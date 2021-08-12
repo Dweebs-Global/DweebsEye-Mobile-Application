@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dweebs_eye/input_output/mic_speech.dart';
+import 'package:dweebs_eye/input_output/speaker_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -22,12 +24,17 @@ class FaceRecognitionState extends State<FaceRecognition> {
   CameraController _camera;
   var interpreter;
   bool _isDetecting = false;
-  CameraLensDirection _direction = CameraLensDirection.front;
+
+  CameraLensDirection _direction = CameraLensDirection.back;
   dynamic data = {};
   double threshold = 1.0;
   Directory tempDir;
   List e1;
   bool _faceFound = false;
+  List<String> resultFaces = [];
+  bool isPlaying = false;
+  bool isListening = false;
+  String userSpeech = '';
   final TextEditingController _name = new TextEditingController();
   @override
   void initState() {
@@ -56,6 +63,19 @@ class FaceRecognitionState extends State<FaceRecognition> {
     } on Exception {
       print('Failed to load model.');
     }
+  }
+
+  playAudio(String text) async {
+
+      await SpeakerAudio.playAudio(
+        // play audio after the photo is taken
+          text: text,
+          onPlaying: (isPlaying) {
+            // flag reflecting the state of speaker
+
+          });
+
+
   }
 
   void _initializeCamera() async {
@@ -103,7 +123,16 @@ class FaceRecognitionState extends State<FaceRecognition> {
               res = _recog(croppedImage);
               // int endTime = new DateTime.now().millisecondsSinceEpoch;
               // print("Inference took ${endTime - startTime}ms");
+
+              if (!resultFaces.contains(res))
+                {
+                  print('Here');
+                  resultFaces.add(res);
+                  finalResult.add(res, _face);
+                }
+
               finalResult.add(res, _face);
+
             }
             setState(() {
               _scanResults = finalResult;
@@ -155,6 +184,25 @@ class FaceRecognitionState extends State<FaceRecognition> {
       );
     }
 
+    return
+      GestureDetector(
+        child: Container(
+          constraints: const BoxConstraints.expand(),
+          child: _camera == null
+              ? const Center(child: null)
+              : Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              CameraPreview(_camera),
+              _buildResults(),
+            ],
+          ),
+        ),
+        onTap: (){
+          _addLabel();
+        },
+      );
+
     return Container(
       constraints: const BoxConstraints.expand(),
       child: _camera == null
@@ -167,6 +215,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
               ],
             ),
     );
+
   }
 
   void _toggleCameraDirection() async {
@@ -283,6 +332,8 @@ class FaceRecognitionState extends State<FaceRecognition> {
 
   String compare(List currEmb) {
     if (data.length == 0) return "No Face saved";
+
+    if (data.length == 0) return "Face Not Recognized. Please tap on screen to save.";
     double minDist = 999;
     double currDist = 0.0;
     String predRes = "NOT RECOGNIZED";
@@ -354,43 +405,101 @@ class FaceRecognitionState extends State<FaceRecognition> {
       _camera = null;
     });
     print("Adding new face");
-    var alert = new AlertDialog(
-      title: new Text("Add Face"),
-      content: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: new TextField(
-              controller: _name,
-              autofocus: true,
-              decoration: new InputDecoration(
-                  labelText: "Name", icon: new Icon(Icons.face)),
-            ),
+    var alert =
+    new GestureDetector(
+      child:  new AlertDialog(
+        title: new Text("Add Face"),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new TextField(
+                controller: _name,
+                autofocus: true,
+                decoration: new InputDecoration(
+                    labelText: "Name", icon: new Icon(Icons.face)),
+              ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: Text("Save"),
+              onPressed: () {
+                _handle(_name.text.toUpperCase());
+                _name.clear();
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              _initializeCamera();
+              Navigator.pop(context);
+            },
           )
         ],
       ),
-      actions: <Widget>[
-        new FlatButton(
-            child: Text("Save"),
-            onPressed: () {
-              _handle(_name.text.toUpperCase());
-              _name.clear();
-              Navigator.pop(context);
-            }),
-        new FlatButton(
-          child: Text("Cancel"),
-          onPressed: () {
-            _initializeCamera();
-            Navigator.pop(context);
-          },
-        )
-      ],
+      onTap: () => {
+        getNameInput()
+      },
     );
+
     showDialog(
         context: context,
         builder: (context) {
           return alert;
         });
   }
+
+  void getNameInput() async
+  {
+    print('Get name input called');
+
+    if (this.isPlaying == false)
+    {
+      await SpeakerAudio.playAudio(
+        // play audio after the photo is taken
+          text: 'Please identify this person',
+          onPlaying: (isPlaying) {
+            // flag reflecting the state of speaker
+            this.isPlaying = isPlaying;
+
+          });
+      toggleRecording();
+    }
+
+  }
+
+  Future toggleRecording() => MicSpeech.toggleRecording(
+    // show the recognized text on the screen
+    onResult: (speech) {
+      //print('Name: '+speech);
+
+      print('Name: '+speech);
+      _handle(speech.toString().toUpperCase());
+      setState(() => userSpeech = speech);
+    },
+    // flag reflecting the state of mic
+    onListening: (isListening) {
+      setState(() => this.isListening = isListening);
+      if (!isListening) {
+        // when mic is not active anymore
+        setState(() {
+          isPlaying = true; // flag to disable mic button after listening
+        });
+
+        execute() async {
+
+        }
+
+        Future.delayed(Duration(milliseconds: 500), () {
+          // check the command sent from mic
+          // and take a photo after right commands
+          final text = userSpeech.toLowerCase();
+          playAudio(text);
+        });
+      }
+    },
+  );
 
   void _handle(String text) {
     data[text] = e1;
