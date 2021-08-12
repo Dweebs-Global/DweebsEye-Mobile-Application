@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'authentication/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'authentication/oauth_b2c_integration/oauth_flow.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -28,8 +28,16 @@ class MyApp extends StatelessWidget {
       title: title,
       theme: ThemeData(
         primarySwatch: Colors.teal,
+        appBarTheme: AppBarTheme(
+            color: Colors.teal[700],
+            textTheme: TextTheme(
+                headline5:
+                    TextStyle(fontWeight: FontWeight.w600, fontSize: 24.0))),
+        floatingActionButtonTheme:
+            FloatingActionButtonThemeData(backgroundColor: Colors.teal[800]),
+        textTheme: TextTheme(headline4: TextStyle(color: Colors.grey[800])),
       ),
-      home: new Login(title, firstCamera),
+      home: new OAuthFlow(title, firstCamera),
     );
   }
 }

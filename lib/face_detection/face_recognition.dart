@@ -13,7 +13,6 @@ import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
 import 'package:quiver/collection.dart';
 import 'package:flutter/services.dart';
 
-
 class FaceRecognition extends StatefulWidget {
   @override
   FaceRecognitionState createState() => FaceRecognitionState();
@@ -50,12 +49,12 @@ class FaceRecognitionState extends State<FaceRecognition> {
     try {
       final gpuDelegateV2 = tfl.GpuDelegateV2(
           options: tfl.GpuDelegateOptionsV2(
-            false,
-            tfl.TfLiteGpuInferenceUsage.fastSingleAnswer,
-            tfl.TfLiteGpuInferencePriority.minLatency,
-            tfl.TfLiteGpuInferencePriority.auto,
-            tfl.TfLiteGpuInferencePriority.auto,
-          ));
+        false,
+        tfl.TfLiteGpuInferenceUsage.fastSingleAnswer,
+        tfl.TfLiteGpuInferencePriority.minLatency,
+        tfl.TfLiteGpuInferencePriority.auto,
+        tfl.TfLiteGpuInferencePriority.auto,
+      ));
 
       var interpreterOptions = tfl.InterpreterOptions()
         ..addDelegate(gpuDelegateV2);
@@ -103,14 +102,14 @@ class FaceRecognitionState extends State<FaceRecognition> {
         String res;
         dynamic finalResult = Multimap<String, Face>();
         detect(image, _getDetectionMethod(), rotation).then(
-              (dynamic result) async {
+          (dynamic result) async {
             if (result.length == 0)
               _faceFound = false;
             else
               _faceFound = true;
             Face _face;
             imglib.Image convertedImage =
-            _convertCameraImage(image, _direction);
+                _convertCameraImage(image, _direction);
             for (_face in result) {
               double x, y, w, h;
               x = (_face.boundingBox.left - 10);
@@ -142,7 +141,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
             _isDetecting = false;
           },
         ).catchError(
-              (_) {
+          (_) {
             _isDetecting = false;
           },
         );
@@ -209,12 +208,12 @@ class FaceRecognitionState extends State<FaceRecognition> {
       child: _camera == null
           ? const Center(child: null)
           : Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          CameraPreview(_camera),
-          _buildResults(),
-        ],
-      ),
+              fit: StackFit.expand,
+              children: <Widget>[
+                CameraPreview(_camera),
+                _buildResults(),
+              ],
+            ),
     );
 
   }
@@ -239,7 +238,8 @@ class FaceRecognitionState extends State<FaceRecognition> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Face recognition'),
+        title: Text('Face recognition',
+            style: Theme.of(context).appBarTheme.textTheme.headline5),
         actions: <Widget>[
           PopupMenuButton<Choice>(
             onSelected: (Choice result) {
@@ -263,7 +263,7 @@ class FaceRecognitionState extends State<FaceRecognition> {
       ),
       body: _buildImage(),
       floatingActionButton:
-      Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Column(mainAxisAlignment: MainAxisAlignment.end, children: [
         FloatingActionButton(
           backgroundColor: (_faceFound) ? Colors.blue : Colors.blueGrey,
           child: Icon(Icons.add),

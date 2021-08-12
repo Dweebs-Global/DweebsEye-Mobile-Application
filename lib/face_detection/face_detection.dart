@@ -29,7 +29,8 @@ class FaceDetectionState extends State<FaceDetection> {
     return Scaffold(
         // adding bar with name and back button
         appBar: AppBar(
-          title: Text('DweebsEye Face Detection'),
+          title: Text('DweebsEye Face Detection',
+              style: Theme.of(context).appBarTheme.textTheme.headline5),
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
