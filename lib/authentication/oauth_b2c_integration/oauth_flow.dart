@@ -93,9 +93,11 @@ class _OAuthFlowState extends State<OAuthFlow> {
         if (!token.hasRefreshToken()) {
           // if no refresh token available (first sign-in or signed out on error),
           // user will have to sign in manually, so give audio hint
+
           getUserAgent();
           playAudio(
               'You are redirected to a sign-in webpage. You might need screen reader or other help for this step.');
+
         } // if refresh token exists, app will try to get new access token programmatically
         await oauth.login(); // sign in (with or without user interaction)
       }

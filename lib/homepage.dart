@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dweebs_eye/newscreens/viewpager.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:aad_oauth/aad_oauth.dart';
@@ -135,7 +136,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    /*
+     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
@@ -171,6 +173,9 @@ class _HomePageState extends State<HomePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
+     */
+    return Menu();
+
   }
 
   Future toggleRecording() => MicSpeech.toggleRecording(

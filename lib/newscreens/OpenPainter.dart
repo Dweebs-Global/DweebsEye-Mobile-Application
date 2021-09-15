@@ -5,7 +5,9 @@ class OpenPainter extends CustomPainter
   @override
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
-    canvas.drawCircle(Offset(200, 200), 100, Paint());
+    var paint = Paint()
+    ..color = Color(0xffb507c3);
+    canvas.drawCircle(Offset(150, 300), 100, paint);
   }
 
   @override
