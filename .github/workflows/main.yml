@@ -20,12 +20,7 @@ jobs:
         flutter-version: '2.0.0'
     - name: Get flutter dependencies.
       run: flutter pub get
-    # - name: Run tests for flutter project.
-    #   env:
-    #       TENANT_SECRET: ${{ secrets.TENANT }}
-    #       CLIENT_ID_SECRET: ${{ secrets.CLIENT_ID }}
-    #       SCOPE_SECRET: ${{ secrets.SCOPE }}
-    #       POLICY_SECRET: ${{ secrets.POLICY }}
-    #       TOKEN_IDENTIFIER_SECRET: ${{ secrets.POLICY }}
-    #       NONCE_SECRET: ${{ secrets.NONCE }}
-    #   run: flutter test
+    - name: Use env.dev file
+      run: cp .env.dev .env
+    - name: Run tests for flutter project.
+      run: flutter test
