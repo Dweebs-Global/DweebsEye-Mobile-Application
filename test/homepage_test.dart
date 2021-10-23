@@ -10,7 +10,8 @@ void main() {
     // Verify that commands are displayed
     expect(find.text('text'), findsOneWidget);
     expect(find.text('object'), findsOneWidget);
+    expect(find.text('face'), findsOneWidget);
     expect(find.text('map'), findsNothing);
-    expect(find.byType(TextButton), findsNWidgets(2));
+    expect(find.byType(TextButton), findsNWidgets(3));
   });
 }
