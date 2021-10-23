@@ -6,9 +6,7 @@ import 'package:aad_oauth/helper/auth_storage.dart';
 import 'authentication/oauth_b2c_integration/b2c_config.dart';
 import 'package:dweebs_eye/input_output/takesnapshot.dart';
 import 'package:flutter/material.dart';
-import 'input_output/mic_speech.dart';
-import 'input_output/speaker_audio.dart';
-import 'face_detection/face_recognition.dart';
+import 'results.dart';
 
 class Command {
   // all commands triggering the main app functions
@@ -20,6 +18,13 @@ class Command {
   static const car = 'car';
   static const yes = 'yes';
   static const no = 'no';
+}
+
+class MenuItem {
+  String title;
+  String subtitle;
+
+  MenuItem({this.title, this.subtitle});
 }
 
 class HomePage extends StatefulWidget {
@@ -37,10 +42,8 @@ class _HomePageState extends State<HomePage> {
   bool isPlaying = false;
   bool isCapturing = false;
   XFile photo;
-  String text = 'Disable screen reader if using one.';
-  String userSpeech = '';
-  String currentCommand = '';
   CameraDescription firstCamera;
+
   _HomePageState(this.firstCamera);
 
   takePhoto() async {
@@ -55,27 +58,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  playAudio(String text) async {
-    await SpeakerAudio.playAudio(
-        text: text,
-        onPlaying: (isPlaying) {
-          // flag reflecting the state of speaker
-          setState(() {
-            this.isPlaying =
-                isPlaying; // flag to enable mic button after speaking
-          });
-        });
-  }
-
-  Future<String> httpRequest() async {
+  Future<String> httpRequest(String cmd) async {
     // getting access token for requests
     try {
       var config = B2Cconfig.config;
       var oauth = AadOAuth(config);
       var _authStorage = AuthStorage(tokenIdentifier: env['TOKEN_IDENTIFIER']);
       var token = await _authStorage.loadTokenFromCache();
+
       String accessToken;
       String path;
+
       if (token.hasValidAccessToken()) {
         // if there is a valid access token, use it
         accessToken = token.accessToken;
@@ -84,21 +77,21 @@ class _HomePageState extends State<HomePage> {
         await oauth.login();
         accessToken = await oauth.getAccessToken();
       } // ? implement else case (no refresh token -> go to b2c auth) ?
-      if (currentCommand == Command.object) {
+
+      if (cmd == Command.object) {
         path = '/api/object_detector';
-      } else if (currentCommand == Command.text) {
+      } else if (cmd == Command.text) {
         path = '/api/text_reader';
-      } else if (currentCommand == Command.detect) {
-        path = '/api/face_detector';
       }
+
       var url = Uri.https(env['API_URL'], path);
       var headers = <String, String>{
         'Content-Type': 'image/jpeg',
         'Authorization': 'Bearer $accessToken'
       };
       var body = await photo.readAsBytes();
-
       var response = await http.post(url, headers: headers, body: body);
+
       return response.body;
     } catch (e) {
       print(e);
@@ -106,139 +99,95 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  executeAPIFlow() async {
+  executeAPIFlow([String cmd = ""]) async {
     // wait till photo is taken before going further
     await takePhoto();
     //check if photo is taken and returned to homescreen
     // and return corresponding answer
     if (photo != null) {
       // send request
-      var response = await httpRequest();
+      var response = await httpRequest(cmd);
+
       if (response != null) {
-        playAudio(response);
-        setState(() => this.text = response);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultsScreen(results: response),
+          ),
+        );
       }
     } else {
-      playAudio('Could not take a photo.');
+      return AlertDialog(
+        title: const Text('Photo not taken'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: const <Widget>[
+              Text('Could not take a photo from the camera'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Approve'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
     }
-    currentCommand = '';
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // notify user of arriving at main page only after widget is build
-      playAudio('Start using Dweebs Eye');
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(
-            widget.title,
-            style: Theme.of(context).appBarTheme.textTheme.headline5,
-          ),
-          centerTitle: true,
+    List<TextButton> menuItems = [
+      TextButton(
+        child: _tile("object", "Describe an object in a picture"),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Color(0xffb507c3)),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 60.0),
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ),
+        onPressed: () {
+          executeAPIFlow("object");
+        },
+      ),
+      TextButton(
+        child: _tile("text", "Read text from a picture"),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Color(0xffb507c3)),
         ),
-        floatingActionButton: Container(
-          height: 150,
-          width: 150,
-          child: FloatingActionButton(
-            child: Icon(
-              isListening ? Icons.mic : Icons.mic_none,
-              size: 70.0,
-            ),
-            tooltip: "Microphone",
-            onPressed: isPlaying ? null : toggleRecording,
-            backgroundColor: isPlaying ? Colors.grey : Colors.teal[700],
-          ),
+        onPressed: () {
+          executeAPIFlow("text");
+        },
+      ),
+    ];
+
+    return Material(
+      child: Container(
+        decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [const Color(0xFFB507C3), const Color(0xFF090557)],
+              begin: FractionalOffset.topLeft,
+              end: FractionalOffset.bottomRight,
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        child: ListView(
+          children: menuItems,
+          padding: const EdgeInsets.only(top: 100.0),
+        ),
       ),
     );
   }
 
-  Future toggleRecording() => MicSpeech.toggleRecording(
-        // show the recognized text on the screen
-        onResult: (speech) {
-          setState(() => userSpeech = speech);
-          setState(() => this.text = speech);
-        },
-        // flag reflecting the state of mic
-        onListening: (isListening) {
-          setState(() => this.isListening = isListening);
-
-          if (!isListening) {
-            // when mic is not active anymore
-            setState(() {
-              isPlaying = true; // flag to disable mic button after listening
-            });
-
-            Future.delayed(Duration(milliseconds: 500), () {
-              // check the command sent from mic
-              // and take a photo after right commands
-              final text = userSpeech.toLowerCase();
-              final List textList = text.split(' ');
-              // "object" command flow
-              if (textList.contains(Command.object)) {
-                currentCommand = Command.object;
-                executeAPIFlow();
-              } // "text" command flow
-              else if (textList.contains(Command.text)) {
-                currentCommand = Command.text;
-                executeAPIFlow();
-              } // "detect face" command flow
-              else if (textList.contains(Command.face) &&
-                  textList.contains(Command.detect)) {
-                currentCommand = Command.detect;
-                executeAPIFlow();
-              } else if (textList.contains(Command.car)) {
-              } // "recognise face" command flow
-              else if (textList.contains(Command.face) &&
-                  textList.contains(Command.recognise)) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FaceRecognition(),
-                  ),
-                );
-                Future.delayed(Duration(milliseconds: 500), () {
-                  setState(() {
-                    isPlaying =
-                        false; // flag to set the inactive state of speaker
-                  }); // to make mic available after returning to HomePage
-                });
-              } else if (text.isNotEmpty) {
-                playAudio('Unknown command');
-              } else {
-                // if nothing was said, run playAudio with ' '
-                playAudio(' '); // to activate the mic again
-              }
-              setState(
-                  () => userSpeech = ''); // set the speech and photo to default
-              photo = null; // in case next time no command and no photo
-            });
-          } else {
-            // case when mic is active (if (isListening))
-            setState(() {
-              isPlaying = false; // flag to set the inactive state of speaker
-            });
-          }
-        },
-      );
+  ListTile _tile(String title, String subtitle) {
+    return ListTile(
+      title: Text(title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 24,
+            color: Colors.white,
+          )),
+      subtitle: Text(subtitle, style: const TextStyle(color: Colors.white54)),
+    );
+  }
 }
