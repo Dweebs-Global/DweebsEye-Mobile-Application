@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
                 color: Colors.white),
           ),
         ),
-        scaffoldBackgroundColor: Color(0xFF090557),
+        scaffoldBackgroundColor: Colors.purple,
         textTheme: TextTheme(headline4: TextStyle(color: Colors.white)),
       ),
       home: new OAuthFlow(title, firstCamera),
