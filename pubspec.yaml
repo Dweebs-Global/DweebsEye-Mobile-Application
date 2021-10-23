@@ -28,8 +28,6 @@ dependencies:
   path_provider: ^2.0.2
   path: ^1.8.0
   flutter_tts: ^3.2.2
-  firebase_core: ^1.4.0
-  firebase_auth: ^3.0.1
   google_sign_in: ^5.0.7
   image_picker: ^0.8.3+2
   aad_oauth: ^0.2.2
