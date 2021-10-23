@@ -82,6 +82,8 @@ class _HomePageState extends State<HomePage> {
         path = '/api/object_detector';
       } else if (cmd == Command.text) {
         path = '/api/text_reader';
+      } else if (cmd == Command.detect) {
+        path = '/api/face_detector';
       }
 
       var url = Uri.https(env['API_URL'], path);
@@ -157,6 +159,15 @@ class _HomePageState extends State<HomePage> {
         ),
         onPressed: () {
           executeAPIFlow("text");
+        },
+      ),
+      TextButton(
+        child: _tile("face", "Describe a person's face in a picture"),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Color(0xffb507c3)),
+        ),
+        onPressed: () {
+          executeAPIFlow("face");
         },
       ),
     ];
