@@ -22,6 +22,8 @@ jobs:
         flutter-version: '2.0.0'
     - name: Get flutter dependencies.
       run: flutter pub get
+    - name: Use env.dev file
+      run: cp .env.dev .env
     - name: Build APK
       run: flutter build appbundle --target-platform android-arm,android-arm64,android-x64
     - name: Create Release

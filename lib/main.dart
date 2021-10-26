@@ -29,15 +29,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: title,
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.deepPurple,
         appBarTheme: AppBarTheme(
-            color: Colors.teal[700],
-            textTheme: TextTheme(
-                headline5:
-                    TextStyle(fontWeight: FontWeight.w600, fontSize: 24.0))),
-        floatingActionButtonTheme:
-            FloatingActionButtonThemeData(backgroundColor: Colors.teal[800]),
-        textTheme: TextTheme(headline4: TextStyle(color: Colors.grey[800])),
+          color: Colors.deepPurple[400],
+          textTheme: TextTheme(
+            headline5: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 24.0,
+                color: Colors.white),
+          ),
+        ),
+        scaffoldBackgroundColor: Colors.purple,
+        textTheme: TextTheme(headline4: TextStyle(color: Colors.white)),
       ),
       home: new OAuthFlow(title, firstCamera),
     );
