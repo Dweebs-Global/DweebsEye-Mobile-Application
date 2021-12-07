@@ -7,7 +7,7 @@ packages:
       name: aad_oauth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.3.0"
   archive:
     dependency: transitive
     description:

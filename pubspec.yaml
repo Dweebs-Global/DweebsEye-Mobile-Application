@@ -30,7 +30,7 @@ dependencies:
   flutter_tts: ^3.2.2
   google_sign_in: ^5.0.7
   image_picker: ^0.8.3+2
-  aad_oauth: ^0.2.2
+  aad_oauth: ^0.3.0
   flutter_dotenv: ^3.1.0
   tflite_flutter: ^0.8.0
   image: ^3.0.2
